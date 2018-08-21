@@ -1,0 +1,20 @@
+
+.new_pers {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+}
+.new_pers input {
+    border: none;
+}
+.divKnee{
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+form.new_pers:hover {
+    border: 1px solid #aaa;
+}
