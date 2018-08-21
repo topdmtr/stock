@@ -13,12 +13,45 @@ var tree = {
     console.log("Max knee= " + this.MaxKnee);
   },
 
+  isAct: function(currentId) {
+	var personParent = this.peoples.find(x => x.idPers === String(currentId));
+//		alert (personParent.fio);
+//		alert (personParent.birthDate);
+//		alert (personParent.deadDate);
+
+/*	if ((personParent.fio != "") || (personParent.birthDate != "") || (personParent.deadDate != "")) {
+//		alert ("true");
+		return true;
+	}
+	else{
+//		alert ("false");
+		return false;
+	}
+*/   },    
+  
   out: function(currentId) {
     var person = this.peoples.find(x => x.idPers === String(currentId));
     console.log("нашлось " + person.fio);
     console.log("колено knee_" + person.indKnee);
 
+	this.isAct(person.indFather);
+	this.isAct(person.indMother);
+	
+/*	if (this.isAct(person.indFather)) {
+	//	var addFath = "<a class="butAdd" href="#">+</a>";
+	}
+	else{
+	//	var addFath = "";
+	}
+	if (this.isAct(person.indMother)){
+	//	var addMoth = "<a class="butAdd" href="#">+</a>";
+	}
+	else{
+	//	var addMoth = "";
+	}
+*/
     var formNew = `<form class="new_pers" method="post"> <label>id человека<br> <input class="inpIdPers" type="text" name="id_pers" value="${currentId}" disabled/></label><br> <label>ФИО<br> <input class="editable inpFio" type="text" name="fio" value="${person.fio}"/></label><br> <label>Дата рождения<br> <input class="editable inpBirthDate" type="text" name="birthDate" value="${person.birthDate}"></label><br> <label>Дата смерти<br> <input class="editable inpDaedDate" type="text" name="deadDate" value="${person.deadDate}"></label><br><label>номер колена<br> <input class="inpIdPersFath" type="text" name="id_pers_fath" value="${person.indKnee}" disabled/></label><br> <label>id отец<br> <input class="inpIdPersFath" type="text" name="id_pers_fath" value="${person.indFather}" disabled/></label><br> <label>id мать<br> <input class="inpIdPersMoth" type="text" name="id_pers_moth" value="${person.indMother}" disabled/></label><br>=====<br></form>`;
+//    var formNew = `<form class="new_pers" method="post"> <label>id человека<br> <input class="inpIdPers" type="text" name="id_pers" value="${currentId}" disabled/></label><br> <label>ФИО<br> <input class="editable inpFio" type="text" name="fio" value="${person.fio}"/></label><br> <label>Дата рождения<br> <input class="editable inpBirthDate" type="text" name="birthDate" value="${person.birthDate}"></label><br> <label>Дата смерти<br> <input class="editable inpDaedDate" type="text" name="deadDate" value="${person.deadDate}"></label><br><label>номер колена<br> <input class="inpIdPersFath" type="text" name="id_pers_fath" value="${person.indKnee}" disabled/></label><br> <label>id отец<br> <input class="inpIdPersFath" type="text" name="id_pers_fath" value="${person.indFather}" disabled/>${addFath}</label><br> <label>id мать<br> <input class="inpIdPersMoth" type="text" name="id_pers_moth" value="${person.indMother}" disabled/>${addMoth}</label><br>=====<br></form>`;
 
     if (!$("div").is("#knee_" + person.indKnee)) {
       console.log("НЕ СУЩ колено knee_" + person.indKnee);
@@ -44,7 +77,6 @@ var tree = {
       }
     }
   }
-
 }
 
 $(function() {
