@@ -12,7 +12,7 @@ var tree = {
     }
   },
 
-  out: function(currentId) {
+  out: function(currentId, childId) {
     var person = this.peoples.find(x => x.idPers === String(currentId));   
 
     var formNew = `<form class="new_pers" method="post" data-id="${currentId}" data-knee="${person.indKnee}" data-mother_id="${person.indMother}" data-father_id="${person.indFather}"> <input class="editable inpFio" type="text" placeholder="ФИО" name="fio" value="${person.fio}"/><input class="editable inpBirthDate" type="text" name="birthDate" placeholder="Дата рождения" value="${person.birthDate}"><input class="editable inpDaedDate" type="text" name="deadDate" placeholder="Дата смерти" value="${person.deadDate}"> </form>`;
@@ -22,10 +22,10 @@ var tree = {
     }
 
     $("#knee_" + person.indKnee).append(formNew);
-
+    
     if (person.indKnee < this.MaxKnee) {
-      this.out(person.indFather);
-      this.out(person.indMother);
+      this.out(person.indFather,currentId);
+      this.out(person.indMother,currentId);
     }
     return;
   },
@@ -39,7 +39,33 @@ var tree = {
         break;
       }
     }
+  },
+
+  getCoords: function(id){
+    el = $(`.new_pers[data-id="${id}"]`);
+    x = el.position().left;
+    y = el.position().top ;
+    
+    return {x: x,y: y, h: el.outerHeight(), w:el.outerWidth()};
+  },
+
+  drawLines: function(currentId, childId){
+    var person = this.peoples.find(x => x.idPers === String(currentId));
+    if (childId) {
+      lineId = `line${childId}to${currentId}`;
+      $('#lines').append(`<svg><line id="${lineId}" stroke="gray"/></svg>`);   
+      childCoords =  this.getCoords(childId);     
+      thisCoords  =  this.getCoords(currentId);
+      $(`#${lineId}`).attr('x1',childCoords.x + childCoords.w/2).attr('y1',childCoords.y + childCoords.h).attr('x2',thisCoords.x + thisCoords.w/2).attr('y2',thisCoords.y);
+    }
+
+        if (person.indKnee < this.MaxKnee) {
+      this.drawLines(person.indFather,currentId);
+      this.drawLines(person.indMother,currentId);
+    }
+    return;
   }
+
 
 }
 
@@ -49,7 +75,15 @@ $(function() {
     tree.updateField(+$(this).closest("form").data("id"), $(this).attr("name"), $(this).val());
   });
 
+  $(window).resize(function(){
+    $('#lines').empty();
+    tree.drawLines(1);
+  });
+
 });
 
 tree.init();
 tree.out(1);
+tree.drawLines(1);
+
+
