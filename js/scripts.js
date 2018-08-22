@@ -13,19 +13,21 @@ var tree = {
   },
 
   out: function(currentId, childId) {
-    var person = this.peoples.find(x => x.idPers === String(currentId));   
-
-    var formNew = `<form class="new_pers" method="post" data-id="${currentId}" data-knee="${person.indKnee}" data-mother_id="${person.indMother}" data-father_id="${person.indFather}"> <input class="editable inpFio" type="text" placeholder="ФИО" name="fio" value="${person.fio}"/><input class="editable inpBirthDate" type="text" name="birthDate" placeholder="Дата рождения" value="${person.birthDate}"><input class="editable inpDaedDate" type="text" name="deadDate" placeholder="Дата смерти" value="${person.deadDate}"> </form>`;
+    var person = this.peoples.find(x => x.idPers === String(currentId));
+    var active = this.isActive(currentId) ? "active" : "";
+    var addFather = this.isActive(person.indFather) ? "" : `<a href='' class='addParent addFather' data-id="${person.indFather}">Отец</a>`;
+    var addMother = this.isActive(person.indMother) ? "" : `<a href='' class='addParent addMother' data-id="${person.indMother}">Мать</a>`;
+    var formNew = `<form class="new_pers ${active}" method="post" data-id="${currentId}" data-knee="${person.indKnee}" data-mother_id="${person.indMother}" data-father_id="${person.indFather}"> <input class="editable inpFio" type="text" placeholder="ФИО" name="fio" value="${person.fio}"/><div class="dates"><input class="editable inpBirthDate" type="text" name="birthDate" placeholder="Дата рождения" value="${person.birthDate}"> - <input class="editable inpDaedDate" type="text" name="deadDate" placeholder="Дата смерти" value="${person.deadDate}"></div> <div class="addParents">${addFather}${addMother}</div></form>`;
 
     if (!$("div").is("#knee_" + person.indKnee)) {
       $("#forms").append(`<div id="knee_${person.indKnee}" class="divKnee">  </div>`);
     }
 
     $("#knee_" + person.indKnee).append(formNew);
-    
+
     if (person.indKnee < this.MaxKnee) {
-      this.out(person.indFather,currentId);
-      this.out(person.indMother,currentId);
+      this.out(person.indFather, currentId);
+      this.out(person.indMother, currentId);
     }
     return;
   },
@@ -40,28 +42,39 @@ var tree = {
       }
     }
   },
-
-  getCoords: function(id){
+  isActive: function(currentId) {
+    var person = this.peoples.find(x => x.idPers === String(currentId));
+    if (!person) return false;
+    var data = person.fio + person.birthDate + person.deadDate;
+    if (data == "") return false;
+    return true;
+  },
+  getCoords: function(id) {
     el = $(`.new_pers[data-id="${id}"]`);
     x = el.position().left;
-    y = el.position().top ;
-    
-    return {x: x,y: y, h: el.outerHeight(), w:el.outerWidth()};
+    y = el.position().top;
+
+    return {
+      x: x,
+      y: y,
+      h: el.outerHeight(),
+      w: el.outerWidth()
+    };
   },
 
-  drawLines: function(currentId, childId){
+  drawLines: function(currentId, childId) {
     var person = this.peoples.find(x => x.idPers === String(currentId));
-    if (childId) {
+    if (childId && this.isActive(currentId)) {
       lineId = `line${childId}to${currentId}`;
-      $('#lines').append(`<svg><line id="${lineId}" stroke="gray"/></svg>`);   
-      childCoords =  this.getCoords(childId);     
-      thisCoords  =  this.getCoords(currentId);
-      $(`#${lineId}`).attr('x1',childCoords.x + childCoords.w/2).attr('y1',childCoords.y + childCoords.h).attr('x2',thisCoords.x + thisCoords.w/2).attr('y2',thisCoords.y);
+      $('#lines').append(`<svg><line id="${lineId}" stroke="gray"/></svg>`);
+      childCoords = this.getCoords(childId);
+      thisCoords = this.getCoords(currentId);
+      $(`#${lineId}`).attr('x1', childCoords.x + childCoords.w / 2).attr('y1', childCoords.y + childCoords.h).attr('x2', thisCoords.x + thisCoords.w / 2).attr('y2', thisCoords.y);
     }
 
-        if (person.indKnee < this.MaxKnee) {
-      this.drawLines(person.indFather,currentId);
-      this.drawLines(person.indMother,currentId);
+    if (person.indKnee < this.MaxKnee) {
+      this.drawLines(person.indFather, currentId);
+      this.drawLines(person.indMother, currentId);
     }
     return;
   }
@@ -75,9 +88,20 @@ $(function() {
     tree.updateField(+$(this).closest("form").data("id"), $(this).attr("name"), $(this).val());
   });
 
-  $(window).resize(function(){
+  $(window).resize(function() {
     $('#lines').empty();
     tree.drawLines(1);
+  });
+
+  $(document).on("click", ".addParent", function(e) {
+    e.preventDefault();
+    id = $(this).data("id");
+    $(`.new_pers[data-id="${id}"]`).addClass("active");
+
+    /***
+      to be continued =)
+
+    ***/
   });
 
 });

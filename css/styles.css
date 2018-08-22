@@ -1,30 +1,71 @@
-
 .new_pers {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border: 1px solid #e2e2e2;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  visibility: hidden;
 }
+
+.new_pers.active {
+  visibility: visible;
+}
+
 .new_pers input {
-    border: none;
+  border: none;
+  text-align: center;
 }
-.divKnee{
+
+.divKnee {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
 }
 
 .new_pers:hover {
-    border: 1px solid #aaa;
+  border: 1px solid #aaa;
 }
+
+.inpFio {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
 svg {
-    position: absolute;
-    z-index: 0;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-        width: 100%;
-    height: 100%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dates {
+  border: none;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.dates input {
+  width: 100px;
+}
+
+.addParents {
+  display: flex;
+  justify-content: space-around;
+}
+
+.addParent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  opacity: .1;
+}
+
+.addParent:hover {
+  opacity: 1;
 }
