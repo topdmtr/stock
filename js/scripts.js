@@ -85,5 +85,3 @@ $(function() {
 tree.init();
 tree.out(1);
 tree.drawLines(1);
-
-
