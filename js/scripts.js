@@ -12,7 +12,7 @@ var tree = {
     }
   },
 
-  out: function(currentId, childId) {
+  out: function(currentId) {//, childId
     var person = this.peoples.find(x => x.idPers === String(currentId));
     var active = this.isActive(currentId) ? "active" : "";
     var addFather = this.isActive(person.indFather) ? "" : `<a href='' class='addParent addFather' data-id="${person.indFather}">Отец</a>`;
@@ -34,7 +34,7 @@ var tree = {
 
   updateField: function(currentId, nameInp, value) {
     for (j = 0; j < this.peoples.length; ++j) {
-      if (this.peoples[j].idPers == currentId) { // номер нужного объекта по идентификатору
+      if (this.peoples[j].idPers == currentId) {
         this.peoples[j][nameInp] = value;
         this.strJSON = JSON.stringify(this.peoples);
         console.log(this.strJSON);
@@ -43,7 +43,7 @@ var tree = {
     }
   },
   isActive: function(currentId) {
-    var person = this.peoples.find(x => x.idPers === String(currentId));
+    var person = this.findPers(currentId);
     if (!person) return false;
     var data = person.fio + person.birthDate + person.deadDate;
     if (data == "") return false;
@@ -63,7 +63,7 @@ var tree = {
   },
 
   drawLines: function(currentId, childId) {
-    var person = this.peoples.find(x => x.idPers === String(currentId));
+    var person = this.findPers(currentId);
     if (childId && this.isActive(currentId)) {
       lineId = `line${childId}to${currentId}`;
       $('#lines').append(`<svg><line id="${lineId}" stroke="gray"/></svg>`);
@@ -77,9 +77,47 @@ var tree = {
       this.drawLines(person.indMother, currentId);
     }
     return;
+  },
+  createKnee: function(){
+    var newOb = {};
+    var Nmax = this.peoples.length-1;
+    var usedId = this.peoples[Nmax].indMother;//Наибольший существующий Id
+    var j = 1;
+    for (i = 0; i < Nmax+1; i++) {
+      if (!this.findPers(this.peoples[i].indFather)) {
+        newOb.idPers = this.peoples[i].indFather;
+        newOb.fio = "new_"+j;
+        newOb.birthDate = "";
+        newOb.deadDate = "";
+        newOb.indKnee = this.MaxKnee*1+1;
+        newOb.indFather = usedId*1 + 2*j-1;
+        newOb.indMother = usedId*1 + 2*j;
+        this.peoples.push(newOb);
+        console.log("1. Запушили перса (номер в массиве="+(Nmax+j)+") с id="+this.peoples[Nmax+j].idPers+"  fio="+this.peoples[Nmax+j].fio);
+        j=j+1;
+      }
+      if (!this.findPers(this.peoples[i].indMother)) {
+        newOb.idPers = this.peoples[i].indMother;
+        newOb.indKnee = this.MaxKnee*1+1;
+        newOb.indFather = usedId*1 + 2*j-1;
+        newOb.indMother = usedId*1 + 2*j;
+        this.peoples.push(newOb);
+        console.log("2. Запушили перса (номер в массиве="+(Nmax+j)+") с id="+this.peoples[Nmax+j].idPers+"  fio="+this.peoples[Nmax+j].fio);
+        j=j+1;
+      }
+    }
+    this.peoplesJSON = JSON.stringify(this.peoples);
+    console.log(this.peoplesJSON);
+    Nmax = this.peoples.length-1;
+    console.log("3... Последний перс (номер в массиве="+Nmax+") с id="+this.peoples[Nmax].idPers+"  fio="+this.peoples[Nmax].fio);
+    //this.init();
+    //this.out(1);
+  },
+
+  findPers: function(currentId){
+    var person = this.peoples.find(x => x.idPers === String(currentId));
+    return person;
   }
-
-
 }
 
 $(function() {
@@ -96,10 +134,15 @@ $(function() {
   $(document).on("click", ".addParent", function(e) {
     e.preventDefault();
     id = $(this).data("id");
+    if (!tree.findPers(id)) {
+      tree.createKnee();
+    }
     $(`.new_pers[data-id="${id}"]`).addClass("active");
 
     /***
       to be continued =)
+
+
 
     ***/
   });
