@@ -79,14 +79,14 @@ var tree = {
     return;
   },
   createKnee: function(){
-    var newOb = {};
     var Nmax = this.peoples.length-1;
-    var usedId = this.peoples[Nmax].indMother;//Наибольший существующий Id
+    var usedId = this.peoples[Nmax].indMother;//Наибольший существующий Id Fix it
     var j = 1;
     for (i = 0; i < Nmax+1; i++) {
       if (!this.findPers(this.peoples[i].indFather)) {
+        var newOb = {};
         newOb.idPers = this.peoples[i].indFather;
-        newOb.fio = "new_"+j;
+        newOb.fio = "";
         newOb.birthDate = "";
         newOb.deadDate = "";
         newOb.indKnee = this.MaxKnee*1+1;
@@ -97,7 +97,11 @@ var tree = {
         j=j+1;
       }
       if (!this.findPers(this.peoples[i].indMother)) {
+        var newOb = {};
         newOb.idPers = this.peoples[i].indMother;
+        newOb.fio = "";
+        newOb.birthDate = "";
+        newOb.deadDate = "";
         newOb.indKnee = this.MaxKnee*1+1;
         newOb.indFather = usedId*1 + 2*j-1;
         newOb.indMother = usedId*1 + 2*j;
@@ -110,8 +114,9 @@ var tree = {
     console.log(this.peoplesJSON);
     Nmax = this.peoples.length-1;
     console.log("3... Последний перс (номер в массиве="+Nmax+") с id="+this.peoples[Nmax].idPers+"  fio="+this.peoples[Nmax].fio);
-    //this.init();
-    //this.out(1);
+    $('#forms').empty();
+    this.init();
+    this.out(1);
   },
 
   findPers: function(currentId){
