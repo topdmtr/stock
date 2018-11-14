@@ -2,7 +2,7 @@ var tree = {
   peoples: [],
   MaxKnee: 0,
   peoplesJSON: '[{"idPers":"1","fio":"Петя Васильевич Пупкин","birthDate":"02.02.1930","deadDate":"02.02.1950","indKnee":"0","indFather":"2","indMother":"3"},{"idPers":"2","fio":"Вася Сидорович Пупкин","birthDate":"02.02.1910","deadDate":"02.02.1960","indKnee":"1","indFather":"4","indMother":"5"},{"idPers":"3","fio":"Маша Ивановна Дубкина","birthDate":"03.03.1910","deadDate":"03.03.1960","indKnee":"1","indFather":"6","indMother":"7"},{"idPers":"4","fio":"Сидор Ильич Пупкин","birthDate":"02.02.1870","deadDate":"02.02.1930","indKnee":"2","indFather":"8","indMother":"9"},{"idPers":"5","fio":"Катя Савишна Жукина","birthDate":"03.03.1880","deadDate":"03.03.1935","indKnee":"2","indFather":"10","indMother":"11"},{"idPers":"6","fio":"","birthDate":"","deadDate":"","indKnee":"2","indFather":"12","indMother":"13"},{"idPers":"7","fio":"","birthDate":"","deadDate":"","indKnee":"2","indFather":"14","indMother":"15"}]',
-
+//  peoplesJSON: '[{"idPers":"1","fio":"Петя Васильевич Пупкин","birthDate":"02.02.1930","deadDate":"02.02.1950","indKnee":"0","indFather":"2","indMother":"3"},{"idPers":"2","fio":"Вася Сидорович Пупкин","birthDate":"02.02.1910","deadDate":"02.02.1960","indKnee":"1","indFather":"4","indMother":"5"},{"idPers":"3","fio":"Маша Ивановна Дубкина","birthDate":"03.03.1910","deadDate":"03.03.1960","indKnee":"1","indFather":"6","indMother":"7"},{"idPers":"4","fio":"Сидор Ильич Пупкин","birthDate":"02.02.1870","deadDate":"02.02.1930","indKnee":"2","indFather":"8","indMother":"9"},{"idPers":"5","fio":"Катя Савишна Жукина","birthDate":"03.03.1880","deadDate":"03.03.1935","indKnee":"2","indFather":"10","indMother":"11"},{"idPers":"6","fio":"","birthDate":"","deadDate":"","indKnee":"2","indFather":"12","indMother":"13"},{"idPers":"7","fio":"","birthDate":"","deadDate":"","indKnee":"2","indFather":"14","indMother":"15"},{"idPers":"8","fio":"Unknown","birthDate":"","deadDate":"","indKnee":"3","indFather":"16","indMother":"17"},{"idPers":"9","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"18","indMother":"19"},{"idPers":"10","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"20","indMother":"21"},{"idPers":"11","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"22","indMother":"23"},{"idPers":"12","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"24","indMother":"25"},{"idPers":"13","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"26","indMother":"27"},{"idPers":"14","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"28","indMother":"29"},{"idPers":"15","fio":"","birthDate":"","deadDate":"","indKnee":"3","indFather":"30","indMother":"31"}]',
   init: function() {
     this.peoples = JSON.parse(this.peoplesJSON);
     for (i = 0; i < this.peoples.length; i++) {
@@ -85,26 +85,26 @@ var tree = {
     for (i = 0; i < Nmax+1; i++) {
       if (!this.findPers(this.peoples[i].indFather)) {
         var newOb = {};
-        newOb.idPers = this.peoples[i].indFather;
+        newOb.idPers = String(this.peoples[i].indFather);
         newOb.fio = "";
         newOb.birthDate = "";
         newOb.deadDate = "";
-        newOb.indKnee = this.MaxKnee*1+1;
-        newOb.indFather = usedId*1 + 2*j-1;
-        newOb.indMother = usedId*1 + 2*j;
+        newOb.indKnee = String(this.MaxKnee*1+1);
+        newOb.indFather = String(usedId*1 + 2*j-1);
+        newOb.indMother = String(usedId*1 + 2*j);
         this.peoples.push(newOb);
         console.log("1. Запушили перса (номер в массиве="+(Nmax+j)+") с id="+this.peoples[Nmax+j].idPers+"  fio="+this.peoples[Nmax+j].fio);
         j=j+1;
       }
       if (!this.findPers(this.peoples[i].indMother)) {
         var newOb = {};
-        newOb.idPers = this.peoples[i].indMother;
+        newOb.idPers = String(this.peoples[i].indMother);
         newOb.fio = "";
         newOb.birthDate = "";
         newOb.deadDate = "";
-        newOb.indKnee = this.MaxKnee*1+1;
-        newOb.indFather = usedId*1 + 2*j-1;
-        newOb.indMother = usedId*1 + 2*j;
+        newOb.indKnee = String(this.MaxKnee*1+1);
+        newOb.indFather = String(usedId*1 + 2*j-1);
+        newOb.indMother = String(usedId*1 + 2*j);
         this.peoples.push(newOb);
         console.log("2. Запушили перса (номер в массиве="+(Nmax+j)+") с id="+this.peoples[Nmax+j].idPers+"  fio="+this.peoples[Nmax+j].fio);
         j=j+1;
@@ -143,7 +143,13 @@ $(function() {
       tree.createKnee();
     }
     $(`.new_pers[data-id="${id}"]`).addClass("active");
-
+    $(`.new_pers[data-id="${id}"]`).children(".editable.inpFio").val("Unknown");
+	tree.updateField(+id, "fio", "Unknown");
+	//$('#forms').empty();
+	//tree.out(1);
+    $('#lines').empty();
+    tree.drawLines(1);
+	
     /***
       to be continued =)
 

@@ -1,3 +1,7 @@
+#forms{
+	position: absolute;
+}
+
 .new_pers {
   display: flex;
   flex-direction: column;
